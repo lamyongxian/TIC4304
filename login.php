@@ -1,5 +1,60 @@
 <?php
     // Please insert your code here.
+    require_once "config.php";
+    
+    $error = $pwd = $user = "";
+
+    if($_SERVER["REQUEST_METHOD"] == "POST"){
+
+        if(empty(trim($_POST["username"]))){
+            $error = "Enter user name.";
+        } else{
+            $user = trim($_POST["username"]);
+        }
+        
+        if(empty(trim($_POST["password"]))){
+            $error = "Enter password.";     
+        } else{
+            $pwd = trim($_POST["password"]);
+        }
+    
+
+        if (!empty($error)) {
+            echo "<br />";
+            echo $error;
+        }
+
+
+        function login($user1, $pwd1, $link1) {
+            $sql = "SELECT id FROM users WHERE username = '$user1' AND `password` = '$pwd1';";
+            $result = mysqli_query($link1, $sql);
+            return (mysqli_num_rows($result) == 1);
+        }
+        
+
+        if (login($user, $pwd, $link)) {
+            mysqli_close($link);
+            session_start();
+            $_SESSION["user"] = $user;
+            header("Location: welcome.php");
+            die();
+        } else {
+            echo "Wrong username or password!";
+        }
+
+    } else if ($_SERVER["REQUEST_METHOD"] == "GET") {
+        
+        session_start();
+        if (isset($_SESSION["user"]) && !empty($_SESSION["user"])) {
+            header("Location: welcome.php");
+            die();
+        }
+
+    }
+
+    
+    mysqli_close($link);
+
 ?>
 
 <!DOCTYPE html>

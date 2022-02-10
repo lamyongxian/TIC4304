@@ -47,9 +47,34 @@
         }
 
         // Please insert your code here.
+        function register($user1, $pwd1, $link1) {
+            $sql = "INSERT INTO users (username, `password`, created_at) VALUES ('$user1', '$pwd1', NOW())";
+            $result = mysqli_query($link1, $sql);
+            return ($result === TRUE);
+        }
+
+        // If successful redirect to welcome.php
+        if(register($user, $pwd, $link)) {
+            mysqli_close($link);
+            session_start();
+	        $_SESSION["user"] = $user;
+            header("Location: welcome.php");
+            die();
+        } else {
+            echo "Database error!";
+        }
         
-        mysqli_close($link);
+    }  else if ($_SERVER["REQUEST_METHOD"] == "GET") {
+        
+        session_start();
+        if (isset($_SESSION["user"]) && !empty($_SESSION["user"])) {
+            header("Location: welcome.php");
+            die();
+        }
+
     }
+
+    mysqli_close($link);
 ?>
  
 <!DOCTYPE html>
