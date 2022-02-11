@@ -4,6 +4,7 @@ sudo service apache2 restart
 
 #mysql -u lsuser -h 10.0.2.4 -p 12345678
 
+sudo sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
 sudo bash -c 'echo PasswordAuthentication yes >> /etc/ssh/sshd_config'
 sudo service ssh restart
 
